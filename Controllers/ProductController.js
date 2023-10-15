@@ -1,52 +1,50 @@
-const productModel = require("../models/Products");
-const slugify = require("slugify");
+const { json } = require("body-parser");
+const productModel = require("../models/products");
 
-//====>>>> Create A product <<<<====//
+//====>>>> create the product <<<<====//
 module.exports.createProduct = async (req, res) => {
-  if (req.body.productName) {
-    req.body.slug = slugify(req.body.productName);
+  const { productName, description, color, discountPercentage, category } =
+    req.body;
+  console.log(req);
+
+  const thumbnail = `http://localhost:5000/${req.file.path}`;
+  console.log("Hellooooo runing");
+
+  const images = req.files.map((file) => `http://localhost:5000/${file.path}`);
+  console.log(images);
+  console.log(req.files);
+
+  if (!thumbnail) throw "thumbnail is required.";
+
+  console.log(req.files);
+  if (
+    !productName ||
+    !description ||
+    !color ||
+    !discountPercentage
+    // !rating
+  ) {
+    throw "All fields are required.";
   }
-  const createdProduct = await productModel.create(req.body);
-  if (!createdProduct) {
-    throw "unable to create product";
+
+  const productRepeated = await productModel.findOne({ productName });
+
+  if (productRepeated) {
+    throw "Product already exists in database";
   }
-  res.json({
-    status: "Success",
-    message: "product created successfully",
-    data: createdProduct,
+
+  const newProduct = await productModel.create({
+    productName,
+    description,
+    color,
+    discountPercentage,
+    category,
+    thumbnail,
   });
-};
-
-
-//====>>>> update a product <<<<====//
-
-//====>>>> get a product based on id <<<<====//
-module.exports.getProduct = async (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
-    throw "Id not found.";
-  }
-  const foundProduct = await productModel.findById(id);
 
   res.json({
     status: "Success",
-    message: "product fetched successfully",
-    data: foundProduct,
-  });
-};
-
-//====>>>> get all product <<<<====//
-module.exports.getAllProducts = async (req, res) => {
-  const foundProducts = await productModel.find();
-
-  if (!foundProducts) {
-    throw "There is no product in database.";
-  }
-
-  res.json({
-    status: "Success",
-    message: "products fetched successfully",
-    data: foundProducts,
+    message: "Product created successfully",
+    data: newProduct,
   });
 };
