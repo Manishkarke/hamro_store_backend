@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const authRoute = require("./routes/AuthRoutes.js");
 const productRouter = require("./routes/ProductRoutes.js");
+const cartRouter = require("./routes/CartRoutes.js");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 // Custom Middleware
+app.use("api/carts", cartRouter);
 app.use("/api/products", productRouter);
 app.use("/api/auth/", authRoute);
 

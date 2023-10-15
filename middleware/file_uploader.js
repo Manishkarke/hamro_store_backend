@@ -1,3 +1,4 @@
+// my Multer middleware in file_uploader.js
 const multer = require("multer");
 const path = require("path");
 
@@ -13,19 +14,6 @@ const thumbnailStorage = multer.diskStorage({
   },
 });
 
-const imagesStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    console.log(" I am not getting error hai ");
-    cb(null, path.join("./images"));
-  },
-  filename: (req, file, cb) => {
-    console.log(" I am not getting error hai ");
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
-});
 
 module.exports.thumbnailUpload = multer({
   storage: thumbnailStorage,
@@ -33,11 +21,9 @@ module.exports.thumbnailUpload = multer({
     const allowedExtensions = [".jpg", ".jpeg"];
     const fileExtension = path.extname(file.originalname).toLowerCase();
     if (allowedExtensions.includes(fileExtension)) {
-      console.log("Hellowewwew");
       cb(null, true);
     } else {
       cb(new Error("Invalid file type"));
     }
   },
 });
-module.exports.imagesUpload = multer({ storage: imagesStorage });

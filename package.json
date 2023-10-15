@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "susmie",
+  "author": "Manish",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
