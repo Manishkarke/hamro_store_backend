@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 // Custom Middleware
-app.use("api/carts", cartRouter);
+app.use("/api/carts", cartRouter);
 app.use("/api/products", productRouter);
 app.use("/api/auth/", authRoute);
 
